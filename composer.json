@@ -1,0 +1,31 @@
+{
+    "name": "armincms/orderable",
+    "description": "A Laravel Nova tool.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0", 
+        "zareismail/markable": "^0.1",
+        "whitecube/nova-flexible-content": "^0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Armincms\\Orderable\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Armincms\\Orderable\\OrderableServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
