@@ -16,7 +16,7 @@ class CreateSaleablesTable extends Migration
     {
         Schema::create(Orderable::table('saleables'), function (Blueprint $table) { 
             $table->morphs('saleable');
-            $table->decimal('currency', 10)->default('IRR');
+            $table->string('currency', 5)->default('IRR');
             $table->decimal('sale_price', 13, 3)->default(0.000);
             $table->decimal('old_price', 13, 3)->default(0.000);
             $table->tinyInteger('count')->default(1);
