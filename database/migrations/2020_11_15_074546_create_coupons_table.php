@@ -20,8 +20,8 @@ class CreateCouponsTable extends Migration
             $table->string('note')->nullable();  
             $table->nullableMorphs('customer');
             $table->json('rules')->nullable(); 
-            $table->timestamp('starts_at');  
-            $table->timestamp('expires_on');  
+            $table->timestamp('starts_at')->nullable();  
+            $table->timestamp('expires_on')->nullable();  
             $table->timestamps();  
         });
     }
