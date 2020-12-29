@@ -34,7 +34,7 @@ class Order extends Model implements Trackable, Billable
      */
     public function amount(): float
     {
-        return floatval($this->price);
+        return floatval($this->saleables->sum('sale_price'));
     }
 
     /**
