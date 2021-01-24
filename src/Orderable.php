@@ -79,7 +79,7 @@ class Orderable
     {
         return collect(Nova::availableResources($request))->filter(function($resource) {
             return static::isCourier($resource::newModel()); 
-        });
+        })->values();
     } 
 
     /**
@@ -92,6 +92,18 @@ class Orderable
     {
         return collect(Nova::availableResources($request))->filter(function($resource) {
             return static::isOrderable($resource::newModel()); 
+        })->values();
+    } 
+
+    /**
+     * Get the orderable resources.
+     * 
+     * @return array
+     */
+    public static function morphs()
+    {
+        return static::orderableResources(request())->map(function($resource) {
+            return $resource::newModel()->getMorphClass(); 
         });
     } 
 
