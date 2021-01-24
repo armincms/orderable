@@ -15,7 +15,21 @@ class Order extends Model implements Trackable, Billable
      * 
      * @var array
      */
-    protected $cart = []; 
+    protected $cart = [];  
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(function($query) {
+            return $query->forResources(Orderable::morphs()->all());
+        });
+    }
     
     /**
      * Query the related orderable.
@@ -25,7 +39,18 @@ class Order extends Model implements Trackable, Billable
     public function orderable()
     {
         return $this->morphTo();
-    } 
+    }  
+    
+    /**
+     * Query with gieven morph types.
+     *
+     * @param array morphs
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForResources($query, array $morphs)
+    {
+        return $query->whereIn($query->qualifyColumn('orderable_type'), $morphs);
+    }
 
     /**
      * The payment amount.
