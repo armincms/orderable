@@ -3,8 +3,7 @@
 namespace Armincms\Orderable\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Nova;
-use Laravel\Nova\Panel;
+use Laravel\Nova\{Nova, Panel}; 
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\{ID, Badge, Heading, Text, Number, Select, BooleanGroup, BelongsTo, MorphTo, HasMany};
 use Armincms\Fields\{Chain, BelongsToMany}; 
@@ -95,7 +94,16 @@ class Order extends Resource
                         ->withMeta(array_filter([
                             'value' => $options->count() == 1 ? $options->keys()->first() : null
                         ]))
-                        ->readonly(! is_null($this->orderable_type)),
+                        ->readonly(! is_null($this->orderable_type))
+                        ->fillUsing(function($request, $model, $attribute) {
+                            $resource = $request->get($attribute);
+
+                            $model->{$attribute} = $resource::newModel()->getMorphClass();
+                            $model->{$attribute} = $resource::newModel()->getMorphClass();
+                        })
+                        ->resolveUsing(function($value) {
+                            return Nova::resourceForModel($value);
+                        }), 
                 ];
             }), 
 

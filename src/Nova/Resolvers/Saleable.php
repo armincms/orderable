@@ -2,6 +2,7 @@
 
 namespace Armincms\Orderable\Nova\Resolvers;
 
+use Laravel\Nova\Nova;
 use Whitecube\NovaFlexibleContent\Value\ResolverInterface;
 use Armincms\Orderable\Orderable; 
 
@@ -17,8 +18,8 @@ class Saleable implements ResolverInterface
      */
     public function get($resource, $attribute, $layouts)
     {
-        if(class_exists($resource->orderable_type)) {
-            $relation = Orderable::resourceRelation($resource->orderable_type);
+        if($orderableResource = Nova::resourceForModel($resource->orderable)) {
+            $relation = Orderable::resourceRelation($orderableResource);
 
             $resource->relationLoaded($relation) || $resource->load($relation); 
 
@@ -47,13 +48,13 @@ class Saleable implements ResolverInterface
      */
     public function set($model, $attribute, $groups)
     { 
-        if(class_exists($resource = $model->orderable_type)) {  
+        if($orderableResource = Nova::resourceForModel($model->orderable_type)) {  
             $groups = $groups->map->getAttributes()->pluck('count', 'items'); 
-            $saleables = Orderable::saleableQuery($resource::newModel()->findOrNew($model->orderable_id))
+            $saleables = Orderable::saleableQuery($orderableResource::newModel()->findOrNew($model->orderable_id))
                             ->whereKey($groups->keys())->get();
 
-            $model::saved(function($model) use ($saleables, $groups, $resource) {
-                $relationShip = call_user_func([$model, Orderable::resourceRelation($resource)]);
+            $model::saved(function($model) use ($saleables, $groups, $orderableResource) {
+                $relationShip = call_user_func([$model, Orderable::resourceRelation($orderableResource)]);
 
                 $relationShip->sync($saleables->keyBy('id')->map(function($saleable, $id) use ($groups) {
                     return [
