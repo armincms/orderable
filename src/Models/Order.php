@@ -4,6 +4,7 @@ namespace Armincms\Orderable\Models;
  
 use Armincms\Arminpay\Contracts\{Billable, Trackable};
 use Armincms\Arminpay\Concerns\{HasTrackingCode, InteractsWithTransactions};  
+use Armincms\Orderable\Contracts\Orderable as OrderableContract;
 use Armincms\Orderable\Orderable;
 
 class Order extends Model implements Trackable, Billable
@@ -91,6 +92,21 @@ class Order extends Model implements Trackable, Billable
     {
         return $this->finish_callback;
     } 
+
+    /**
+     * Create new order with given model.
+     * 
+     * @param  \Illuminate\Database\Eloqeunt\Model $model
+     * @return $this       
+     */
+    public static function createFromModel(OrderableContract $orderable)
+    {
+        return tap(new static, function($order) use ($orderable) {
+            $order->orderable()->associate($orderable);
+            $order->customer()->associate(request()->user());
+            $order->asPending();
+        });
+    }
 
     /**
      * Handle dynamic method calls into the model.

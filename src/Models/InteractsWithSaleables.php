@@ -24,18 +24,32 @@ trait InteractsWithSaleables
      */
     public function add(Saleable $saleable, int $count = 1)
     {
-        $this->saleables()->whereHasMorph('saleable', [$saleable->getMorphClass()], function($query) use ($saleable) {
+        return $this->addItem($saleable, $count);
+    } 
+
+    /**
+     * Add new item to order.
+     * 
+     * @param \Armincms\Orderable\Contracts\Saleable    $saleable 
+     * @param int|integer $count    
+     */
+    public function addItem(Saleable $saleable, int $count = 1)
+    {
+        $item = $this->saleables()->whereHasMorph('saleable', [$saleable->getMorphClass()], function($query) use ($saleable) {
             return $query->whereKey($saleable->id);
         })->updateOrCreate([
             'saleable_id' => $saleable->id,
             'saleable_type' => $saleable->getMorphClass(),
         ],[
-            'count'         => $count,
             'currency'      => $saleable->currency(),
             'sale_price'    => $saleable->salePrice(),
             'old_price'     => $saleable->oldPrice(),
             'description'   => $saleable->description(),
             'name'          => $saleable->name(),
+        ]);
+
+        $saleable->update([
+            'count' => $item->wasRecentlyCreated ? $count : $count + $item->count
         ]);
 
         return $this;

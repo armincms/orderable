@@ -9,7 +9,7 @@ use Zareismail\Markable\{Markable, HasDraft, HasPending};
 class Model extends LaravelModel
 {
 	use SoftDeletes;
-    use Markable, HasDraft, HasPending, HasCompletion;
+    use Markable, HasDraft, HasPending, HasCompletion, HasPayment, HasOnHold;
 
     /**
      * The attributes that should be cast to native types.
