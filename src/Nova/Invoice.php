@@ -10,7 +10,7 @@ use Armincms\Fields\{Chain, BelongsToMany};
 use Whitecube\NovaFlexibleContent\Flexible; 
 use Armincms\Orderable\Orderable; 
 
-class Order extends Resource 
+class Invoice extends Resource 
 {
     /**
      * The model the resource corresponds to.
@@ -64,7 +64,8 @@ class Order extends Resource
                 ->options([
                     'draft'     => __('Draft'),
                     'pending'   => __('Pending'),
-                    'payment'   => __('Payment'),
+                    'paid'      => __('Paid'),
+                    'onhold'    => __('On Hold'),
                     'shipping'  => __('Shipping'),
                     'completed' => __('Completed'),
                 ])
@@ -73,9 +74,10 @@ class Order extends Resource
             Badge::make(__('Status'), 'marked_as')
                 ->map([
                     'completed' => 'success',
-                    'pending'   => 'warning', 
-                    'draft'     => 'warning', 
-                    'payment'   => 'info', 
+                    'onhold'    => 'warning', 
+                    'pending'   => 'danger', 
+                    'draft'     => 'danger', 
+                    'paid'      => 'info', 
                 ])
                 ->sortable(),
 

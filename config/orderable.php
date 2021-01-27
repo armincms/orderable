@@ -14,7 +14,7 @@ return [
         /*
          * The order resource
          */
-        'order' => \Armincms\Orderable\Nova\Order::class,
+        'order' => \Armincms\Orderable\Nova\Invoice::class,
 
         /*
          * The order resource
