@@ -14,7 +14,7 @@ trait HasOnHold
      *
      * @return $this
      */
-    public function onHold()
+    public function asOnHold()
     {
         return $this->markAs($this->getOnHoldValue());
     } 

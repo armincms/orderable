@@ -27,8 +27,12 @@ class Order extends Model implements Trackable, Billable
     {
         parent::boot();
 
-        static::addGlobalScope(function($query) {
-            return $query->forResources(Orderable::morphs()->all());
+        static::addGlobalScope(function($query) { 
+            return $query->tap(function($query) {
+                if($morphs = Orderable::morphs()->all()) {
+                    return $query->forResources($morphs);
+                }
+            });
         });
     }
     

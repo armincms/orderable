@@ -11,9 +11,9 @@ trait InteractsWithInvoice
 	 * 
 	 * @return \Illuminate\Database\Eloquent\Relations\HasOneOrMany
 	 */
-	public function invoices()
+	public function invoice()
 	{
-		return $this->hasMany(Order::class, 'invoice_id');
+		return $this->belongsTo(Order::class, 'invoice_id');
 	}
 
 	/**

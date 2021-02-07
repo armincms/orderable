@@ -35,9 +35,7 @@ trait InteractsWithSaleables
      */
     public function addItem(Saleable $saleable, int $count = 1)
     {
-        $item = $this->saleables()->whereHasMorph('saleable', [$saleable->getMorphClass()], function($query) use ($saleable) {
-            return $query->whereKey($saleable->id);
-        })->updateOrCreate([
+        $this->newItemQuery($saleable)->updateOrCreate([
             'saleable_id' => $saleable->id,
             'saleable_type' => $saleable->getMorphClass(),
         ],[
@@ -46,12 +44,19 @@ trait InteractsWithSaleables
             'old_price'     => $saleable->oldPrice(),
             'description'   => $saleable->description(),
             'name'          => $saleable->name(),
-        ]);
+        ]); 
 
-        $saleable->update([
-            'count' => $item->wasRecentlyCreated ? $count : $count + $item->count
-        ]);
-
-        return $this;
+        return tap($this->newItemQuery($saleable)->first(), function($item) use ($count) {
+            $item->update([
+                'count' => $item->wasRecentlyCreated ? $count : $count + $item->count
+            ]);
+        }); 
     } 
+
+    public function newItemQuery(Saleable $saleable)
+    {
+        return $this->saleables()->whereHasMorph('saleable', [$saleable->getMorphClass()], function($query) use ($saleable) {
+            return $query->whereKey($saleable->id);
+        });
+    }
 }
