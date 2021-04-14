@@ -166,7 +166,7 @@ class Invoice extends Resource
             }, 'order-items'),
 
             Number::make(__('Total'), function() {
-                return $this->numberFormat($this->saleables->sum('sale_price'), 3);
+                return $this->numberFormat($this->saleables->sum->totalPrice(), 3);
             }),   
 
             Number::make(__('Discount'), function() {

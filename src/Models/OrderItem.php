@@ -36,4 +36,13 @@ class OrderItem extends MorphPivot
         return $this->morphTo();
     }
 
+    /**
+     * Get the total of invoice.
+     * 
+     * @return float
+     */
+    public function totalPrice()
+    { 
+        return floatval($this->sale_price * $this->count);
+    }
 }
