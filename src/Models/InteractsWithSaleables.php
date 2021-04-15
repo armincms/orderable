@@ -44,11 +44,12 @@ trait InteractsWithSaleables
             'old_price'     => $saleable->oldPrice(),
             'description'   => $saleable->description(),
             'name'          => $saleable->name(),
+            'count'         => 0,    
         ]); 
 
         return tap($this->newItemQuery($saleable)->first(), function($item) use ($count) {
             $item->update([
-                'count' => $item->wasRecentlyCreated ? $count : $count + $item->count
+                'count' => /*$item->wasRecentlyCreated ? $count :*/ $count + $item->count
             ]);
         }); 
     } 
