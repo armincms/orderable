@@ -10,7 +10,7 @@ interface Saleable
 	 * 
 	 * @return decimal
 	 */
-	public function currency(): string;
+	public function saleCurrency(): string;
 
 	/**
 	 * Get the sale price of the item.
@@ -31,12 +31,12 @@ interface Saleable
 	 * 
 	 * @return decimal
 	 */
-	public function name(): string;
+	public function saleName(): string;
 
 	/**
 	 * Get the item description.
 	 * 
 	 * @return decimal
 	 */
-	public function description(): string;
+	public function saleDescription(): string;
 }

@@ -39,11 +39,11 @@ trait InteractsWithSaleables
             'saleable_id' => $saleable->id,
             'saleable_type' => $saleable->getMorphClass(),
         ],[
-            'currency'      => $saleable->currency(),
+            'currency'      => $saleable->saleCurrency(),
             'sale_price'    => $saleable->salePrice(),
             'old_price'     => $saleable->oldPrice(),
-            'description'   => $saleable->description(),
-            'name'          => $saleable->name(),
+            'description'   => $saleable->saleDescription(),
+            'name'          => $saleable->saleName(),
             'count'         => 0,    
         ]); 
 

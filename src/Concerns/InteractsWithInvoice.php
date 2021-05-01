@@ -21,7 +21,7 @@ trait InteractsWithInvoice
 	 * 
 	 * @return decimal
 	 */
-	public function price(): float
+	public function salePrice(): float
 	{
 		return floatval($this->price);
 	}
@@ -41,7 +41,7 @@ trait InteractsWithInvoice
 	 * 
 	 * @return decimal
 	 */
-	public function name(): string
+	public function slaeName(): string
 	{
 		return strval($this->name);
 	}
@@ -51,7 +51,7 @@ trait InteractsWithInvoice
 	 * 
 	 * @return decimal
 	 */
-	public function description(): string
+	public function saleDescription(): string
 	{
 		return strval($this->description) ?: $this->name();
 	}
