@@ -29,8 +29,10 @@ class Shipped extends Component implements Resourceable
 							->firstOrFail();
 
 		$order->asCompleted()->save();
-
-		event(new OrderCompleted($order));
+		
+		if (! $order->isCompleted() || \Auth::guard('admin')->check()) { 
+		  	event(new OrderCompleted($order));
+		}
 
 		$this->resource($order);  
 
