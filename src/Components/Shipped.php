@@ -28,9 +28,10 @@ class Shipped extends Component implements Resourceable
 		$order = Order::viaCode($request->route('id'))->with('saleables', 'orderable', 'transactions')
 							->firstOrFail();
 
-		$order->asCompleted()->save();
-		
-		if (! $order->isCompleted() || \Auth::guard('admin')->check()) { 
+      
+		if (! $order->isCompleted() || \Auth::guard('admin')->check()) {  
+			$order->asCompleted()->save();
+          
 		  	event(new OrderCompleted($order));
 		}
 
