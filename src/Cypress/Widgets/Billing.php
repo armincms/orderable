@@ -28,7 +28,11 @@ class Billing extends GutenbergWidget
      */
     public function boot(CypressRequest $request, $layout)
     {   
-        parent::boot($request, $layout);   
+        parent::boot($request, $layout); 
+
+        $this->renderable(function($request) {
+            return ! is_null($request->resolveFragment()->metaValue('resource'));
+        });
     } 
 
     /**
