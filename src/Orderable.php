@@ -7,33 +7,16 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Nova;
 
 class Orderable
-{
+{  
     /**
-     * The tables prefix string.
-     * 
-     * @var string
-     */
-    public static $prefix = 'ord';
-
-    /**
-     * Get the resource class.
-     *
-     * @return void
-     */
-    public static function resource(string $name)
-    {
-        return config("orderable.resources.{$name}");
-    } 
-
-    /**
-     * Determine if the given model implements Saleable.
+     * Determine if the given model implements Salable.
      * 
      * @param  \Illuminate\Database\Eloquent\Model $model 
      * @return boolean 
      */
-    public static function isSaleable($model)
+    public static function isSalable($model)
     {
-        return $model instanceof Contracts\Saleable;
+        return $model instanceof Contracts\Salable;
     } 
 
     /**
@@ -45,42 +28,7 @@ class Orderable
     public static function isOrderable($model)
     {
         return $model instanceof Contracts\Orderable;
-    } 
-
-    /**
-     * Determine if the given model implements Dispatchable.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Model $model 
-     * @return boolean 
-     */
-    public static function isDispatchable($model)
-    {
-        return $model instanceof Contracts\Dispatchable;
-    }
-
-    /**
-     * Determine if the given model implements Dispatchable.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Model $model 
-     * @return boolean 
-     */
-    public static function isCourier($model)
-    {
-        return $model instanceof Contracts\Courier;
-    }
-
-    /**
-     * Get the courier resources.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return array
-     */
-    public static function courierResources(Request $request)
-    {
-        return collect(Nova::availableResources($request))->filter(function($resource) {
-            return static::isCourier($resource::newModel()); 
-        })->values();
-    } 
+    }  
 
     /**
      * Get the orderable resources.
@@ -97,96 +45,14 @@ class Orderable
 
     /**
      * Get the orderable resources.
-     * 
-     * @return array
-     */
-    public static function morphs()
-    {
-        return static::orderableResources(request())->map(function($resource) {
-            return $resource::newModel()->getMorphClass(); 
-        });
-    } 
-
-    /**
-     * Get the orderable resource by the key.
      *
      * @param \Illuminate\Http\Request $request
      * @return array
      */
-    public static function resourceForKey($key)
+    public static function salableResources(Request $request)
     {
-        return static::orderableResources(app('request'))->first(function($resource) use ($key) {
-            return $resource::uriKey() === $key;
-        });
+        return collect(Nova::availableResources($request))->filter(function($resource) {
+            return static::isSalable($resource::newModel()); 
+        })->values();
     }  
-
-    /**
-     * Get the orderable resource by the key.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return array
-     */
-    public static function resourceForRelation($relation)
-    { 
-        return static::orderableResources(app('request'))->first(function($resource) use ($relation) { 
-            return static::resourceRelation($resource) === $relation;
-        });
-    } 
-
-    /**
-     * Guess relation-shipt for the given resource.
-     * 
-     * @param  \Laravel\Nova\Resource $resource 
-     * @return string           
-     */
-    public static function resourceRelation($resource)
-    {
-        return Str::camel(Str::snake($resource::uriKey()));
-    }  
-
-    /**
-     * Get the Query for the given model.
-     * 
-     * @param  \Illuminate\Database\Eloquent\Model $resource 
-     * @return \Illuminate\Database\Eloquent\Builder          
-     */
-    public static function saleableQuery($model)
-    {
-        return static::isSaleable($model) ? $model : $model->saleables();  
-    } 
-
-    /**
-     * Get the prefixed table name.
-     * 
-     * @param  string $name
-     * @return string      
-     */
-    public static function table(string $name)
-    {
-        return Str::startsWith($name, static::prefix('')) ? $name : static::prefix($name); 
-    }
-
-    /**
-     * Prepend the prefix to the given string.
-     * 
-     * @param  string $suffix 
-     * @return string         
-     */
-    public static function prefix(string $suffix)
-    {
-        return implode('_', [static::$prefix, $suffix]);
-    }
-
-    /**
-     * Set the table prefix string.
-     * 
-     * @param  string $prefix 
-     * @return static         
-     */
-    public static function prefixUsing(string $prefix)
-    {
-        static::$prefix = rtrim($prefix, '_');
-
-        return static::class;
-    }
 }

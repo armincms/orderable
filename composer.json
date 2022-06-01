@@ -7,6 +7,7 @@
     ],
     "license": "MIT",
     "require": {
+        "armincms/contract": "^1.8",
         "armincms/markable": "^1.0",
         "armincms/arminpay": "^3.0"
     },

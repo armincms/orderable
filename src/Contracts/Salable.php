@@ -3,7 +3,7 @@
 namespace Armincms\Orderable\Contracts;
   
 
-interface Saleable
+interface Salable
 {
 	/**
 	 * Get the sale price currency.

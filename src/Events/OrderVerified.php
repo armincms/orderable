@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Armincms\Orderable\Models\OrderableOrder;
 
-class OrderCompleted
+class OrderVerified
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

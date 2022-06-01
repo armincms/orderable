@@ -1,11 +1,11 @@
 <?php
 namespace Armincms\Orderable;
-
-use Illuminate\Contracts\Support\DeferrableProvider;  
+  
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider; 
 use Laravel\Nova\Nova; 
+use Zareismail\Gutenberg\Gutenberg;
 
-class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
+class ServiceProvider extends AuthServiceProvider
 {
     /**
      * The policy mappings for the application.
@@ -19,58 +19,30 @@ class ServiceProvider extends AuthServiceProvider implements DeferrableProvider
      *
      * @return void
      */
-    public function register()
+    public function boot()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/orderable.php', 'orderable');  
         $this->loadJsonTranslationsFrom(__DIR__.'/../resources/lang');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');   
-        $this->registerPolicies();
-        $this->configureMacros();
+        $this->registerPolicies(); 
         Nova::resources(config('orderable.resources'));
-    } 
+        Gutenberg::fragments([
+            Cypress\Fragments\Billing::class,
+        ]);
+        Gutenberg::widgets([
+            Cypress\Widgets\Billing::class,
+        ]);
+        Gutenberg::templates([
+            \Armincms\Orderable\Gutenberg\Templates\BillingWidget::class,
+        ]);
 
-    /**
-     * Regsiter some macro methods.
-     * 
-     * @return void
-     */
-    public function configureMacros()
-    {
-        // Handles the customer orders relationship.
-        // Builder::macro('orders', function() {
-        //     $model = $this->getModel();
-        //     $resource = Orderable::resource('order');
-            
-        //     if($model instanceof Authenticatable) {
-        //         return $model->hasMany($resource::$model);
-        //     }
-
-        //     unset(static::$macros['orders']);
-
-        //     return $model->orders();
-        //  });
-    } 
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [];
-    }
-
-    /**
-     * Get the events that trigger this service provider to register.
-     *
-     * @return array
-     */
-    public function when()
-    {
-        return [
-            \Illuminate\Console\Events\ArtisanStarting::class,
-            \Laravel\Nova\Events\ServingNova::class,
-        ];
-    }
+        app('router')->middleware('web')->prefix('_order')->group(function($router) {
+            $router
+                ->post('{order}', Http\Controllers\RegisterController::class)
+                ->name('orderable.order.register');
+            $router
+                ->get('{order}', Http\Controllers\VerifyController::class)
+                ->name('orderable.order.verify');
+        });
+    }   
 }

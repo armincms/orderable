@@ -54,6 +54,6 @@ trait HasCompletion
      */
     public function getCompletedValue()
     {
-        return defined('static::COMPLEtED_VALUE') ? static::COMPLEtED_VALUE : 'completed';
+        return defined('static::COMPLETED_VALUE') ? static::COMPLETED_VALUE : 'completed';
     }
 }

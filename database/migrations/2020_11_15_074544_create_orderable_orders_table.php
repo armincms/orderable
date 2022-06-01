@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Armincms\Orderable\Orderable;
 
-class CreateOrdersTable extends Migration
+class CreateOrderableOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,15 +14,15 @@ class CreateOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create(Orderable::table('orders'), function (Blueprint $table) {
-            $table->bigIncrements('id'); 
-            $table->string('marked_as')->default('pending');
+        Schema::create('orderable_orders', function (Blueprint $table) {
+            $table->id(); 
+            $table->markable()->default('pending');
             $table->unsignedMediumInteger('tracking_code')->unique()->index();
-            $table->text('note')->nullable();
-            $table->nullableMorphs('courier');
-            $table->nullableMorphs('orderable');
-            $table->nullableMorphs('customer');
-            $table->string('finish_callback')->nullable();
+            $table->text('note')->nullable();  
+            $table->auth();
+            $table->resourceName();
+            $table->string('resource')->index();
+            $table->string('callback_url')->nullable();
             $table->softDeletes();
             $table->timestamps(); 
         });
@@ -35,6 +35,6 @@ class CreateOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(Orderable::table('orders'));
+        Schema::dropIfExists('orderable_orders');
     }
 }

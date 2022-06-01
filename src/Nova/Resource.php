@@ -2,17 +2,20 @@
 
 namespace Armincms\Orderable\Nova;
 
+use Armincms\Contract\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource as NovaResource;
 
 abstract class Resource extends NovaResource
 {  
+    use Fields;
+
     /**
      * The logical group associated with the resource.
      *
      * @var string
      */
-    public static $group = 'Sales';
+    public static $group = 'Orders';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -29,6 +32,16 @@ abstract class Resource extends NovaResource
     public static $search = [
         'id',
     ];
+
+    /**
+     * Get the URI key for the resource.
+     *
+     * @return string
+     */
+    public static function uriKey()
+    {
+        return 'orderable-' . parent::uriKey();
+    }
 
     /**
      * Build an "index" query for the given resource.
