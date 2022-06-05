@@ -15,8 +15,15 @@ class RegisterController extends Controller
      */
     public function __invoke(RegisterRequest $request, $order)
     {
-        return ArminpayGateway::enable()
-            ->findOrFail($request->gateway)
-            ->checkout($request, OrderableOrder::tracking($order)->firstOrFail());
+        try { 
+            return ArminpayGateway::enable()
+                ->findOrFail($request->gateway)
+                ->checkout($request, OrderableOrder::tracking($order)->firstOrFail());
+        } catch (\Exception $e) {
+            return back()->with([
+                'success' => false,
+                'message' => strval($e->getMessage()),
+            ]);
+        }
     }
 }

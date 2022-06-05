@@ -215,7 +215,11 @@ class OrderableOrder extends Model implements Billable
         $gateways = ArminpayGateway::enable()->get();
 
         if ($gateways->count() === 1 && ! $billingPage) {
-            return $gateways->pop()->checkout($request, $this);
+            try { 
+                return $gateways->pop()->checkout($request, $this);
+            } catch(\Exception $e) {
+
+            }
         }
 
         if ($fragment = Gutenberg::cachedFragments()->find(Billing::billingPage())) {
