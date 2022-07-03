@@ -2,21 +2,14 @@
 
 namespace Armincms\Orderable\Nova;
 
-use Alvinhu\ChildSelect\ChildSelect; 
-use Armincms\Contract\Nova\Bios;  
-use Illuminate\Http\Request;  
+use Alvinhu\ChildSelect\ChildSelect;
+use Armincms\Contract\Nova\Bios;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Select;
 use Zareismail\Gutenberg\Gutenberg;
 
 class Billing extends Bios
-{   
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
-    public static $model = \Armincms\Dashboard\Models\Option::class; 
-
+{
     /**
      * Get the fields displayed by the resource.
      *
@@ -24,7 +17,7 @@ class Billing extends Bios
      * @return array
      */
     public function fields(Request $request)
-    { 
+    {
         return [
             Select::make(__('Billing Currency'), 'billing_currency')->options([
                 'IRR' => __('Iranina Rials'),
@@ -43,23 +36,23 @@ class Billing extends Bios
                 ->required()
                 ->rules('required')
                 ->displayUsingLabels()
-                ->exceptOnForms(), 
+                ->exceptOnForms(),
 
-                ChildSelect::make(__('Billing Page'), "billing_fragment")->options(function ($website) {   
+                ChildSelect::make(__('Billing Page'), "billing_fragment")->options(function ($website) {
                     return Gutenberg::cachedFragments()->where('website_id', $website)->keyBy->getKey()->map->name;
                 })
                 ->parent("billing_website")
                 ->required()
                 ->rules('required')
                 ->hideFromDetail(),
- 
+
         ];
-    }  
+    }
 
     /**
      * Get billing page.
-     *  
-     * @return integer            
+     *
+     * @return integer
      */
     public static function billingPage()
     {
@@ -68,11 +61,11 @@ class Billing extends Bios
 
     /**
      * Get billing page.
-     *  
-     * @return integer            
+     *
+     * @return integer
      */
     public static function cuurency()
     {
         return static::option("billing_currency");
-    } 
+    }
 }
